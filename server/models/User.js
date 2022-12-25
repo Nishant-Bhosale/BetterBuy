@@ -1,7 +1,8 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const userSchema = new Schema(
   {
@@ -42,6 +43,7 @@ const userSchema = new Schema(
 
 userSchema.statics.findUserByCredentials = async (email, password) => {
   try {
+    password = password.toString();
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -57,6 +59,7 @@ userSchema.statics.findUserByCredentials = async (email, password) => {
     return user;
   } catch (error) {
     console.log(error);
+    return error;
   }
 };
 
@@ -65,7 +68,7 @@ userSchema.methods.generateAuthToken = async function () {
 
   const payload = { _id: user._id };
 
-  const token = await jwt.sign(payload, process.env.SECRET_KEY);
+  const token = await jwt.sign(payload, process.env.secretKey);
 
   user.tokens = user.tokens.concat({ token });
 
@@ -78,13 +81,15 @@ userSchema.pre("save", async function (next) {
   const user = this;
 
   if (!user.isModified("password")) {
-    next();
+    return next();
   }
 
-  const hashedPassword = await bcrypt.hash(user.password, 9);
+  const hashedPassword = await bcrypt.hash(user.password, 10);
 
   user.password = hashedPassword;
+  return next();
 });
 
 const User = mongoose.model("User", userSchema);
-export default User;
+
+module.exports = User;

@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+mongoose.set("strictQuery", false);
+
 const connectDB = async () => {
   const { DB_PRODUCTION } = process.env;
-  console.log(DB_PRODUCTION);
   try {
     await mongoose.connect(DB_PRODUCTION, {
       useNewUrlParser: true,
