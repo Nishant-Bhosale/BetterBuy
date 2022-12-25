@@ -14,6 +14,10 @@ const productSchema = new Schema(
     image: {
       type: Buffer,
     },
+    forSale: {
+      type: Boolean,
+      default: false,
+    },
     sold: {
       type: Boolean,
       default: false,
