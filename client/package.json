@@ -6,9 +6,16 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-range": "^1.8.14",
+    "react-router-dom": "^6.6.1",
     "react-scripts": "5.0.1",
+    "react-spinners": "^0.13.7",
+    "react-toastify": "^9.1.1",
+    "reactstrap": "^9.1.5",
+    "toastify": "^2.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -34,5 +41,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:5000/"
 }

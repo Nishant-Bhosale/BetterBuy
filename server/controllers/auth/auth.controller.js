@@ -12,7 +12,6 @@ const login = async (req, res) => {
     }
 
     const user = await User.findUserByCredentials(email, password);
-
     if (!user) {
       res.status(404).json({
         message: "Please enter correct email and password.",
@@ -24,9 +23,7 @@ const login = async (req, res) => {
     const token = await user.generateAuthToken();
 
     res.status(200).json({
-      name: user.name,
-      email: user.email,
-      token,
+      user: { ...user._doc, password: null, token, tokens: null },
       sucess: true,
     });
   } catch (error) {
@@ -59,7 +56,7 @@ const signup = async (req, res) => {
 
     const token = await newUser.generateAuthToken();
 
-    res.status(201).json({ name, email, token, success: true });
+    res.status(201).json({ user: { ...newUser._doc, token }, success: true });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: true, message: "Internal Server Error!" });

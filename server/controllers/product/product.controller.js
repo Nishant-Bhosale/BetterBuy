@@ -1,10 +1,24 @@
 const Product = require("../../models/Product");
 const User = require("../../models/User");
 
+const convertImageToBase64 = (products) => {
+  const convertedProducts = products.map((product) => {
+    let buffer, base64Image;
+    if (product.image) {
+      buffer = Buffer.from(product.image);
+      base64Image = buffer.toString("base64");
+    }
+
+    return { ...product._doc, image: base64Image || "" };
+  });
+  return convertedProducts;
+};
+
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find({ sold: false, forSale: true });
+    const allProducts = await Product.find({ sold: false, forSale: true });
 
+    const products = convertImageToBase64(allProducts);
     res.status(200).json({ products });
   } catch (error) {
     console.log(error);
@@ -18,6 +32,31 @@ const getUserPurchasedProducts = async (req, res) => {
       .populate("purchasedProducts")
       .exec();
     res.status(200).json({ success: true, products: user.purchasedProducts });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error", error: true });
+  }
+};
+
+const getUserCartProducts = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate("cartProducts")
+      .exec();
+    res.status(200).json({ success: true, products: user.purchasedProducts });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error", error: true });
+  }
+};
+
+const getUserCreatedProducts = async (req, res) => {
+  try {
+    const userCreatedProducts = await Product.find({ createdBy: req.user._id });
+
+    const products = convertImageToBase64(userCreatedProducts);
+
+    res.status(200).json({ success: true, products });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error", error: true });
@@ -84,14 +123,14 @@ const updateProduct = async (req, res) => {
       return res.status(400).json({ message: "Invalid creator!", error: true });
     }
 
-    const updatedProduct = await Product.findOneAndUpdate(productId, {
-      forSale,
-    });
+    product.forSale = forSale;
+
+    await product.save();
 
     res.status(202).json({
       message: "Product updated successfully",
       success: true,
-      product: updatedProduct,
+      product: { ...product._doc, forSale },
     });
   } catch (error) {
     console.log(error);
@@ -147,10 +186,65 @@ const buyProduct = async (req, res) => {
   }
 };
 
+const addProductToCart = async (req, res) => {
+  let {
+    params: { id: productId },
+    user,
+  } = req;
+  console.log(productId);
+  try {
+    productId.toString();
+    const product = await Product.findById(productId);
+
+    if (!product || product.sold || !product.forSale)
+      return res
+        .status(400)
+        .json({ message: "Product not Found!", error: true });
+
+    const { _id: userId } = req.user;
+
+    if (product.createdBy.toString() === userId.toString()) {
+      return res.status(404).json({
+        message: `Cannot add ${product.name} created by you!`,
+        error: true,
+      });
+    }
+
+    const productInCart = user.cartProducts.includes(productId);
+    if (productInCart)
+      return res
+        .status(400)
+        .json({ message: "Product is already in cart!", error: true });
+
+    const productBoughtAlready = user.purchasedProducts.includes(productId);
+    if (productBoughtAlready)
+      return res
+        .status(400)
+        .json({ message: "Product Bought Already!", error: true });
+
+    req.user.cartProducts.push(productId);
+    await req.user.save();
+    await product.save();
+
+    res.status(200).json({
+      message: "Added to cart successfully!",
+      success: true,
+      user,
+      product,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error", error: true });
+  }
+};
+
 module.exports = {
   createProduct,
   updateProduct,
   buyProduct,
   getAllProducts,
   getUserPurchasedProducts,
+  getUserCreatedProducts,
+  addProductToCart,
+  getUserCartProducts,
 };

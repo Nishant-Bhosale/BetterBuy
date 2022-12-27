@@ -1,0 +1,80 @@
+.productDetails {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.heading {
+  font-size: 1.15em;
+  padding-bottom: 0.4em;
+  margin-bottom: 0px;
+  color: #224957;
+  font-weight: bold;
+}
+
+.productName {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  color: #224957;
+  padding: 8px 0;
+  font-size: 1.25rem;
+}
+
+.productName p {
+  margin: 0;
+}
+
+.productOptions {
+  width: 100%;
+  padding: 8px 0;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.productOptions p {
+  font-weight: 700;
+  color: #224957;
+  margin: 0;
+}
+
+.addBtn,
+.updateBtn {
+  color: #fff;
+  border: 1px solid #7064e5;
+  border-radius: 6px;
+  width: 50%;
+  font-size: 20px;
+  background: #7064e5;
+  transition: all 0.3s ease-in-out;
+}
+.addBtn {
+  width: 100%;
+}
+
+.addBtn:hover,
+.updateBtn:hover {
+  color: #7064e5;
+  transform: scale(1.025);
+  background-color: transparent;
+}
+
+.editForm {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sold {
+  background-color: rgb(77, 206, 77);
+  color: white;
+  width: 100%;
+  text-align: center;
+  padding-inline: 1rem;
+  border-radius: 6px;
+  font-size: 20px;
+}

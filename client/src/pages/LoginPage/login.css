@@ -1,0 +1,93 @@
+.loginPageRow {
+  max-width: 1220px;
+  margin: 0em auto;
+  width: 100%;
+}
+
+.col-md-6 {
+  margin: auto !important;
+}
+
+.login-form {
+  width: 55% !important;
+  padding: 1em !important;
+  margin: auto !important;
+}
+
+.login-title {
+  font-weight: 900;
+  text-align: left !important;
+  font-size: 3em !important;
+  color: #224957 !important;
+}
+
+.text-purple {
+  color: #7064e5 !important;
+}
+
+.login-input {
+  margin: 1em 0px !important;
+  font-size: 1.2em;
+  color: #7064e5 !important;
+  background: #f4f6f8 !important;
+  border: 1px solid #7064e5;
+  padding: 12px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.login-input::placeholder {
+  color: #7064e5 !important;
+  font-family: "Quicksand", "Inter", sans-serif !important;
+  font-size: 16px;
+}
+
+.login-btn {
+  font-size: 1.2em !important;
+  padding: 0.4em !important;
+  background: #7064e5;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+.login-btn:hover {
+  background: #7064e5 !important;
+}
+
+.login-btn:hover span {
+  transform: scale(1.05) !important;
+}
+
+.hero-section {
+  padding: 4em 6em !important;
+}
+
+.ecom {
+  width: 100%;
+}
+
+.page-title,
+.page-sub-title {
+  color: #224957 !important;
+  font-weight: bold;
+}
+
+.page-title {
+  font-size: 3em;
+  display: flex;
+  align-items: baseline;
+}
+
+.page-sub-title {
+  font-size: 1.2em;
+  margin-bottom: 0px !important;
+}
+
+@media screen and (max-width: 768px) {
+  .hero-section {
+    padding: 2em !important;
+  }
+  .login-form {
+    width: 90% !important;
+  }
+}

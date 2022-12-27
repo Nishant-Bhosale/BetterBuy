@@ -5,6 +5,9 @@ const {
   buyProduct,
   getUserPurchasedProducts,
   getAllProducts,
+  getUserCreatedProducts,
+  getUserCartProducts,
+  addProductToCart,
 } = require("../controllers/product/product.controller");
 const router = express.Router();
 const authMiddleware = require("../middleware/auth");
@@ -23,9 +26,14 @@ const upload = multer({
 });
 
 router.get("/all", getAllProducts);
-router.get("/purchased", authMiddleware, getUserPurchasedProducts);
-router.post("/create", upload.single("image"), authMiddleware, createProduct);
-router.put("/edit/:id", authMiddleware, updateProduct);
 router.post("/buy/:id", authMiddleware, buyProduct);
+router.put("/edit/:id", authMiddleware, updateProduct);
+router.get("/purchased", authMiddleware, getUserPurchasedProducts);
+router.get("/my/products", authMiddleware, getUserCreatedProducts);
+router.post("/create", upload.single("image"), authMiddleware, createProduct);
+router
+  .route("/cart/:id")
+  .get(authMiddleware, getUserCartProducts)
+  .post(authMiddleware, addProductToCart);
 
 module.exports = router;

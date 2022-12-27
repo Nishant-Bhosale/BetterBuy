@@ -1,0 +1,15 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin: 3rem 15rem;
+}
+
+@media (max-width: 768px) {
+  /*breakpoint*/
+  .grid {
+    grid-template-columns: none;
+    gap: 1rem;
+    margin: 0;
+  }
+}

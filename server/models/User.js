@@ -23,6 +23,12 @@ const userSchema = new Schema(
       min: 6,
       max: 64,
     },
+    cartProducts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
     purchasedProducts: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -47,7 +53,7 @@ userSchema.statics.findUserByCredentials = async (email, password) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      throw new Error("User does not exist.");
+      return null;
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
