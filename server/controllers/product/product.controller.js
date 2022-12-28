@@ -178,7 +178,7 @@ const buyProducts = async (req, res) => {
     );
 
     req.user.cartProducts = [];
-    req.user.purchasedProducts = [...idsArray];
+    req.user.purchasedProducts = [...req.user.purchasedProducts, ...idsArray];
     await req.user.save();
 
     res.status(200).json({
