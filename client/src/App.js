@@ -27,6 +27,24 @@ if (localStorage.getItem("user")) {
 
 axios.defaults.baseURL = " http://localhost:5000/";
 
+const routes = [
+  {
+    path: "/myorders",
+    exact: true,
+    element: <OrdersPage />,
+  },
+  {
+    path: "/cart",
+    exact: true,
+    element: <CartPage />,
+  },
+  {
+    path: "/myproducts",
+    exact: true,
+    element: <MyProductsPage />,
+  },
+];
+
 function App() {
   return (
     <>
@@ -50,13 +68,16 @@ function App() {
             <Route path="/login" exact element={<LoginPage />}></Route>
             <Route path="/signup" exact element={<SignUpPage />}></Route>
             <Route element={<PrivateRoutes />}>
-              <Route exact path="myorders" element={<OrdersPage />}></Route>
-              <Route exact path="cart" element={<CartPage />}></Route>
-              <Route
-                exact
-                path="myproducts"
-                element={<MyProductsPage />}
-              ></Route>
+              {routes.map((route) => {
+                return (
+                  <Route
+                    exact={route.exact}
+                    path={route.path}
+                    element={route.element}
+                    key={route.path}
+                  />
+                );
+              })}
             </Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

@@ -3,8 +3,9 @@ import axios from "axios";
 import Loader from "../../components/UI/Loader/Loader";
 import styles from "./MyProductsPage.module.css";
 import ProductList from "../../components/Product/ProductList/ProductList";
-import { Label, Input, Form, FormGroup, Button } from "reactstrap";
+import { Label, Input, Form, FormGroup, Button, Spinner } from "reactstrap";
 import { toast } from "react-toastify";
+import AddProduct from "../../assets/add_product.jpg";
 
 const MyProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -12,6 +13,7 @@ const MyProductsPage = () => {
   const [imagePreview, setImagePreview] = useState("");
   const [image, setImage] = useState(null);
   const [forSale, setForSale] = useState(false);
+  const [isProductCreating, setIsProductCreating] = useState(false);
 
   const productNameRef = useRef();
   const productPriceRef = useRef();
@@ -52,12 +54,10 @@ const MyProductsPage = () => {
     }
   }
 
-  if (loading) {
-    return <Loader />;
-  }
-
   const createProductHandler = async (e) => {
     e.preventDefault();
+    setIsProductCreating(true);
+
     const productNameVal = productNameRef.current.value;
     const productPriceVal = productPriceRef.current.value;
 
@@ -83,8 +83,15 @@ const MyProductsPage = () => {
       productPriceRef.current.value = "";
     } catch (error) {
       console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      setIsProductCreating(false);
     }
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className={styles.myProductsContainer}>
@@ -137,18 +144,28 @@ const MyProductsPage = () => {
                   />
                   For Sale
                 </Label>
-                <Button className={styles.createProductBtn}>Create</Button>
+                <Button className={styles.createProductBtn}>
+                  {isProductCreating ? <Spinner /> : "Create"}
+                </Button>
               </FormGroup>
             </Form>
           </div>
         </div>
       </aside>
 
-      <ProductList
-        products={products}
-        // style={{ marginLeft: "20rem" }}
-        onOwnPage={true}
-      />
+      {!!products.length ? (
+        <ProductList products={products} onOwnPage={true} />
+      ) : (
+        <div className={styles.addProductImage}>
+          <h2>Start by adding some products!</h2>
+          <img
+            src={AddProduct}
+            alt="Create products"
+            width="50%"
+            height="30%"
+          />
+        </div>
+      )}
     </div>
   );
 };

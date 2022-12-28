@@ -58,8 +58,8 @@
 .addBtn:hover,
 .updateBtn:hover {
   color: #7064e5;
-  transform: scale(1.025);
   background-color: transparent;
+  border: 1px solid #7064e5;
 }
 
 .editForm {

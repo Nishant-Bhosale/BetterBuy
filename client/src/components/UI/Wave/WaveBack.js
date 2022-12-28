@@ -3,7 +3,7 @@ const WaveBack = () => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1440 320"
-      style={{ position: "fixed", bottom: 0 }}
+      style={{ position: "fixed" }}
     >
       <path
         fill="#5000ca"

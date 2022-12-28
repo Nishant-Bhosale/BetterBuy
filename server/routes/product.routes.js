@@ -2,7 +2,7 @@ const express = require("express");
 const {
   createProduct,
   updateProduct,
-  buyProduct,
+  buyProducts,
   getUserPurchasedProducts,
   getAllProducts,
   getUserCreatedProducts,
@@ -26,14 +26,12 @@ const upload = multer({
 });
 
 router.get("/all", getAllProducts);
-router.post("/buy/:id", authMiddleware, buyProduct);
+router.post("/buy", authMiddleware, buyProducts);
 router.put("/edit/:id", authMiddleware, updateProduct);
 router.get("/purchased", authMiddleware, getUserPurchasedProducts);
 router.get("/my/products", authMiddleware, getUserCreatedProducts);
 router.post("/create", upload.single("image"), authMiddleware, createProduct);
-router
-  .route("/cart/:id")
-  .get(authMiddleware, getUserCartProducts)
-  .post(authMiddleware, addProductToCart);
+router.route("/cart/:id").post(authMiddleware, addProductToCart);
+router.route("/cart").get(authMiddleware, getUserCartProducts);
 
 module.exports = router;

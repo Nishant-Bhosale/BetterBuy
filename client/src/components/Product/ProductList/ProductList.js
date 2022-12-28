@@ -2,13 +2,17 @@ import React from "react";
 import ProductCard from "../ProductCard/ProductCard";
 import ProductGrid from "../ProductGrid/ProductGrid";
 
-const ProductList = ({ products, style, onOwnPage }) => {
-  console.log(products);
+const ProductList = ({ products, style, onOwnPage, onCart }) => {
   return (
     <ProductGrid style={{ ...style }}>
       {products.map((product, idx) => {
         return (
-          <ProductCard product={product} key={idx} onOwnPage={onOwnPage} />
+          <ProductCard
+            product={product}
+            key={idx}
+            onOwnPage={onOwnPage}
+            onCart={onCart}
+          />
         );
       })}
     </ProductGrid>

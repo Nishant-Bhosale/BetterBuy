@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import Loader from "../../components/UI/Loader/Loader";
 import styles from "./HomePage.module.css";
 import ProductList from "../../components/Product/ProductList/ProductList";
+import EmptyCart from "../../components/UI/EmptyCart/EmptyCart";
 
 const HomePage = () => {
   const [loading, setLoading] = useState(true);
@@ -13,7 +14,6 @@ const HomePage = () => {
     try {
       const data = await axios.get("/api/product/all");
       setProducts(data.data.products);
-      console.log(data.data);
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong!");
@@ -29,7 +29,11 @@ const HomePage = () => {
   if (loading) return <Loader />;
   return (
     <div className={styles.homePageContainer}>
-      <ProductList products={products} />
+      {!!products.length ? (
+        <ProductList products={products} />
+      ) : (
+        <EmptyCart title="We are out of Stock!" />
+      )}
     </div>
   );
 };

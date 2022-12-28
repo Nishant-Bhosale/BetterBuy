@@ -1,5 +1,8 @@
 const Product = require("../../models/Product");
 const User = require("../../models/User");
+const {
+  Types: { ObjectId },
+} = require("mongoose");
 
 const convertImageToBase64 = (products) => {
   const convertedProducts = products.map((product) => {
@@ -31,7 +34,9 @@ const getUserPurchasedProducts = async (req, res) => {
     const user = await User.findById(req.user._id)
       .populate("purchasedProducts")
       .exec();
-    res.status(200).json({ success: true, products: user.purchasedProducts });
+
+    const products = convertImageToBase64(user.purchasedProducts);
+    res.status(200).json({ success: true, products });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error", error: true });
@@ -43,7 +48,9 @@ const getUserCartProducts = async (req, res) => {
     const user = await User.findById(req.user._id)
       .populate("cartProducts")
       .exec();
-    res.status(200).json({ success: true, products: user.purchasedProducts });
+
+    const products = convertImageToBase64(user.cartProducts);
+    res.status(200).json({ success: true, products });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error", error: true });
@@ -112,6 +119,7 @@ const updateProduct = async (req, res) => {
     } = req;
     productId = productId.toString();
     userId = userId.toString();
+
     const product = await Product.findById(productId);
     if (!product) {
       return res
@@ -138,47 +146,44 @@ const updateProduct = async (req, res) => {
   }
 };
 
-const buyProduct = async (req, res) => {
-  let {
-    params: { id: productId },
-    user,
-  } = req;
-
+const buyProducts = async (req, res) => {
   try {
-    productId.toString();
-    const product = await Product.findById(productId);
-
-    if (!product || product.sold || !product.forSale)
-      return res
-        .status(400)
-        .json({ message: "Product not Found!", error: true });
-
     const { _id: userId } = req.user;
 
-    if (product.createdBy.toString() === userId.toString()) {
-      return res.status(404).json({
-        message: "Cannot buy the product created by you!",
-        error: true,
-      });
+    const user = await User.findById(userId).populate("cartProducts").exec();
+
+    const unsoldProducts = user.cartProducts.filter(
+      (prod) =>
+        prod.sold === false &&
+        prod.createdBy.toString() !== userId.toString() &&
+        prod.forSale === true
+    );
+
+    if (unsoldProducts.length === 0) {
+      return res.status(404).json({ message: "Cart is Empty!", error: true });
     }
 
-    const productBoughtAlready = user.purchasedProducts.includes(productId);
-    if (productBoughtAlready)
-      return res
-        .status(400)
-        .json({ message: "Product Bought Already!", error: true });
+    const products = convertImageToBase64(unsoldProducts);
 
-    product.sold = true;
-    product.forSale = false;
-    req.user.purchasedProducts.push(productId);
+    let idsArray = [];
+
+    products.forEach((prod) => {
+      idsArray.push(ObjectId(prod._id));
+      req.user.purchasedProducts.push(prod._id);
+    });
+
+    await Product.updateMany(
+      { _id: { $in: idsArray } },
+      { sold: true, forSale: false }
+    );
+
+    req.user.cartProducts = [];
+    req.user.purchasedProducts = [...idsArray];
     await req.user.save();
-    await product.save();
 
     res.status(200).json({
-      message: "Purchased successfully",
+      message: "Purchased products successfully!",
       success: true,
-      user,
-      product,
     });
   } catch (error) {
     console.log(error);
@@ -241,7 +246,7 @@ const addProductToCart = async (req, res) => {
 module.exports = {
   createProduct,
   updateProduct,
-  buyProduct,
+  buyProducts,
   getAllProducts,
   getUserPurchasedProducts,
   getUserCreatedProducts,

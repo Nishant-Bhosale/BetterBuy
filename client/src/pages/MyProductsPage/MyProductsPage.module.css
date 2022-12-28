@@ -6,7 +6,7 @@
 
 .createProductContainer {
   position: relative;
-  margin-right: 5rem;
+  margin-right: 7rem;
 }
 
 .innerContainer {
@@ -31,6 +31,18 @@
   font-weight: bold;
 }
 
+.addProductImage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 40%;
+}
+
+.addProductImage h2 {
+  text-align: center;
+  margin-top: 1rem;
+}
 .productNameInput {
   margin: 1em 0px !important;
   font-size: 1.1em;

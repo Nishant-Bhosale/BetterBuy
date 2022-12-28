@@ -2,6 +2,7 @@
   max-width: 1220px;
   margin: 0em auto;
   width: 100%;
+  margin-bottom: 3rem;
 }
 
 .col-md-6 {
@@ -48,6 +49,7 @@
   background: #7064e5;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
+  width: 100%;
 }
 
 .login-btn:hover {

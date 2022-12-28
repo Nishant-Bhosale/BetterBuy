@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import styles from "./ProductDetails.module.css";
-import { Form, Input, Label } from "reactstrap";
+import { Form, Input, Label, Spinner } from "reactstrap";
 import { toast } from "react-toastify";
 import AuthContext from "../../../../context/Auth/AuthContext";
 import axios from "axios";
@@ -13,8 +13,10 @@ const ProductDetails = ({
   sold,
   forSale,
   productId,
+  onCart,
 }) => {
   const [isForSale, setIsForSale] = useState(forSale);
+  const [productAddingToCart, setProductAddingToCart] = useState(false);
   const { user } = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -31,11 +33,12 @@ const ProductDetails = ({
       );
       toast.success(res.data.message);
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
   const addProductToCart = async () => {
+    setProductAddingToCart(true);
     if (!user?.token) {
       return navigate("/login");
     }
@@ -46,6 +49,8 @@ const ProductDetails = ({
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
+    } finally {
+      setProductAddingToCart(false);
     }
   };
 
@@ -58,30 +63,34 @@ const ProductDetails = ({
         <p>₹ {price}</p>
       </div>
       <>
-        {!onOwnPage ? (
-          <button
-            className={styles.addBtn}
-            title="Add to Cart"
-            onClick={addProductToCart}
-          >
-            Add to Cart
-          </button>
-        ) : !sold ? (
-          <Form onSubmit={onSubmitHandler} className={styles.editForm}>
-            <Label check className={styles.heading}>
-              <Input
-                type="checkbox"
-                checked={isForSale}
-                onChange={() => {
-                  setIsForSale((prev) => !prev);
-                }}
-              />
-              For Sale
-            </Label>
-            <button className={styles.updateBtn}>Update</button>
-          </Form>
+        {!onCart ? (
+          !onOwnPage ? (
+            <button
+              className={styles.addBtn}
+              title="Add to Cart"
+              onClick={addProductToCart}
+            >
+              {productAddingToCart ? <Spinner /> : "Add To Cart"}
+            </button>
+          ) : !sold ? (
+            <Form onSubmit={onSubmitHandler} className={styles.editForm}>
+              <Label check className={styles.heading}>
+                <Input
+                  type="checkbox"
+                  checked={isForSale}
+                  onChange={() => {
+                    setIsForSale((prev) => !prev);
+                  }}
+                />
+                For Sale
+              </Label>
+              <button className={styles.updateBtn}>Update</button>
+            </Form>
+          ) : (
+            <div className={styles.sold}>Sold</div>
+          )
         ) : (
-          <div className={styles.sold}>Sold</div>
+          <div className={styles.sold}>{sold ? "Sold" : "Not Sold"}</div>
         )}
       </>
     </div>
