@@ -169,7 +169,6 @@ const buyProducts = async (req, res) => {
 
     products.forEach((prod) => {
       idsArray.push(ObjectId(prod._id));
-      req.user.purchasedProducts.push(prod._id);
     });
 
     await Product.updateMany(
