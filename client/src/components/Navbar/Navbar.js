@@ -43,7 +43,7 @@ const Navbar = () => {
       >
         <div className="navbar-container">
           <NavLink to="/" className="navbar-logo" onClick={() => {}}>
-            ECOM
+            Better Buy
           </NavLink>
           <div className="menu-icon" onClick={handleClick}>
             <img

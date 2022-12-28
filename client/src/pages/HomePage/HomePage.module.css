@@ -1,6 +1,22 @@
 .homePageContainer {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
+  margin: auto;
+}
+
+.searchInput {
+  margin: 1em 0px !important;
+  font-size: 1.2em;
+  color: #7064e5 !important;
+  background: #f4f6f8 !important;
+  border: 1px solid #7064e5;
+  padding: 12px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.form {
   margin: auto;
 }

@@ -30,7 +30,11 @@ const OrdersPage = () => {
 
   return (
     <div>
-      <h1 style={{ textAlign: "center", margin: "2rem 0" }}>My Orders!</h1>
+      {
+        <h1 style={{ textAlign: "center", margin: "1rem 0" }}>
+          {!!products.length ? "My Orders!" : "No Orders Yet!"}
+        </h1>
+      }
       {!!products.length ? (
         <ProductList products={products} onCart={true} />
       ) : (
@@ -43,7 +47,6 @@ const OrdersPage = () => {
             paddingTop: "1rem",
           }}
         >
-          <h2>Cart is Empty!</h2>
           <img
             style={{ margin: "auto" }}
             src={EmptyCart}

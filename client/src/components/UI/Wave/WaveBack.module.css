@@ -1,0 +1,9 @@
+.wave {
+  position: fixed;
+}
+
+@media screen and (max-width: 768px) {
+  .wave {
+    bottom: 0;
+  }
+}

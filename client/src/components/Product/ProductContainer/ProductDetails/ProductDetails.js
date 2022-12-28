@@ -17,12 +17,14 @@ const ProductDetails = ({
 }) => {
   const [isForSale, setIsForSale] = useState(forSale);
   const [productAddingToCart, setProductAddingToCart] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const { user } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    setIsUpdating(true);
     try {
       const res = await axios.put(
         `/api/product/edit/${productId}`,
@@ -34,6 +36,8 @@ const ProductDetails = ({
       toast.success(res.data.message);
     } catch (error) {
       toast.error(error.response.data.message);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -84,7 +88,9 @@ const ProductDetails = ({
                 />
                 For Sale
               </Label>
-              <button className={styles.updateBtn}>Update</button>
+              <button className={styles.updateBtn}>
+                {isUpdating ? <Spinner /> : "Update"}
+              </button>
             </Form>
           ) : (
             <div className={styles.sold}>Sold</div>

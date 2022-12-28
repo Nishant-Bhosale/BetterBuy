@@ -41,7 +41,6 @@ const CartPage = () => {
       const res = await axios.post("/api/product/buy");
       toast.success(res.data.message);
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     } finally {
       setPurchasing(false);
@@ -52,12 +51,14 @@ const CartPage = () => {
 
   return (
     <div className={styles.cartPageContainer}>
-      <aside className={styles.totalPrice}>
-        <p>TotalPrice:- ₹ {totalPrice}</p>
-        <Button className={styles.purchaseBtn} onClick={purchaseProducts}>
-          {purchasing ? <Spinner /> : "Purchase"}
-        </Button>
-      </aside>
+      {!!products.length && (
+        <aside className={styles.totalPrice}>
+          <p>TotalPrice:- ₹ {totalPrice}</p>
+          <Button className={styles.purchaseBtn} onClick={purchaseProducts}>
+            {purchasing ? <Spinner /> : "Purchase"}
+          </Button>
+        </aside>
+      )}
       {!!products.length ? (
         <ProductList products={products} onCart={true} />
       ) : (
