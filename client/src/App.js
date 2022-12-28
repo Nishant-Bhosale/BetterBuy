@@ -25,7 +25,7 @@ if (localStorage.getItem("user")) {
   setAuthToken(user?.token);
 }
 
-axios.defaults.baseURL = " http://localhost:5000/";
+axios.defaults.baseURL = "https://betterbuy-q32m.onrender.com/";
 
 const routes = [
   {
